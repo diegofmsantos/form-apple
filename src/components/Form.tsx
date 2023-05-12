@@ -14,7 +14,7 @@ const Form = () => {
     const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
     
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='bg-black opacity-90 w-96 h-3/4 rounded-lg flex flex-col justify-start items-center border boder-white py-2 mb-6'>
+        <form onSubmit={handleSubmit(onSubmit)} className='bg-black bg-opacity-80 w-96 h-3/4 rounded-lg flex flex-col justify-start items-center border boder-white py-2 mb-6'>
             <img className='w-40 pt-2 mb-6' src={appleId} alt="Logo Apple" />
             <div className='h-6 flex justify-center items-center gap-3'>
                 <MdLogin className='w-5 h-5 text-white' />
