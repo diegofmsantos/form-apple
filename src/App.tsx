@@ -1,7 +1,5 @@
-import './App.css'
 import appleBg from "./assets/banner-apple.png";
 import Form from "./components/Form";
-
 
 const App = () => {
 

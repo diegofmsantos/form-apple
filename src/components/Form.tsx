@@ -1,20 +1,34 @@
 import appleId from "../assets/apple-id.png";
 import { MdLogin } from 'react-icons/md';
 import { RiLockPasswordLine } from 'react-icons/ri';
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type Inputs = {
-    login: string,
-    password: string
-}
+const schema = z.object({
+    login: z.string()
+    .nonempty('Digite seu login.')
+    .min(5, {message: 'Mínimo de 5 caracteres.'}),
+    password: z.string()
+    .nonempty('Digite sua senha.')
+    .min(5, {message: 'Mínimo de 5 caracteres.'})
+        
+})
+
+type inputs = z.infer<typeof schema>
 
 const Form = () => {
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
-    const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<inputs>({
+        resolver: zodResolver(schema)
+    });
+
+    function formUser(data: any) {
+        console.log(data)
+    }
     
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='bg-black bg-opacity-80 w-96 h-3/4 rounded-lg flex flex-col justify-start items-center border boder-white py-2 mb-6 max-[450px]:w-[350px] max-[380px]:w-[320px]'>
+        <form onSubmit={handleSubmit(formUser)} className='bg-black bg-opacity-80 w-96 h-3/4 rounded-lg flex flex-col justify-start items-center border boder-white py-2 mb-6 max-[450px]:w-[350px] max-[380px]:w-[320px]'>
             <img className='w-40 pt-2 mb-6' src={appleId} alt="Logo Apple" />
             <div className="h-12 text-center">
                 <div className='h-6 flex justify-center items-center gap-3'>
@@ -24,12 +38,12 @@ const Form = () => {
                     id="login"
                     placeholder='Login'
                     autoComplete='off'
-                    {...register("login", {required: true, minLength: 3})}
+                    {...register("login")}
                     />
                 </div>
-                {errors?.login?.type === 'required' && <span className="h-8 text-red-500 text-sm">Digite seu login.</span>}
-                {errors?.login?.type === 'minLength' && <span className="h-8 text-red-500 text-sm">Seu login precisa ter mais de 3 caracteres.</span>}
+                {errors?.login?.message && <span className="h-8 text-red-500 text-sm">{errors?.login.message}</span>}
             </div>
+
             <div className="h-12 text-center">
                 <div className='h-6 flex justify-center items-center gap-3 mt-4'>
                     <RiLockPasswordLine className='w-5 h-5 text-white max-[400px]:w-4 max-[400px]:h-4' />
@@ -38,16 +52,16 @@ const Form = () => {
                     id="password"
                     placeholder='Password'
                     autoComplete='off'
-                    {...register("password", {required: true, minLength: 6})}
+                    {...register("password")}
                     />
                 </div>
-                {errors.password?.type === 'required' && <span className="h-8 text-red-500 text-sm">Digite sua senha.</span>}
-                {errors.password?.type === 'minLength' && <span className="h-8 text-red-500 text-sm">Sua senha precisa ter mais de 6 caracteres.</span>}
+                {errors?.password?.message && <span className="h-8 text-red-500 text-sm">{errors?.password.message}</span>}
             </div>
             <div className='text-white text-sm space-x-12 mb-8 mt-8 max-[400px]:space-x-9'>
                 <input type="checkbox" id="remember" /> Remember me
                 <a className='underline' href="#">Forgot Password?</a>
             </div>
+            
             <button className='text-white border rounded md py-2 px-8 w-60 text-lg font-bold ease-in duration-300 hover:bg-gray-300 hover:text-black' type="submit">Enter</button>
         </form>
     )
